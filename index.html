@@ -222,7 +222,7 @@
                 storyGenre: 'Ciencia Ficción',
                 storyText: '',
                 imageSrc: null,
-                aiTool: 'Midjourney',
+                aiTool: 'IA Generativa', // Default genérico
                 prompt: '',
                 targetAudience: '12-15 años',
                 copyText: '',
@@ -260,13 +260,13 @@
 
             const calculateProgress = () => {
                 let points = 0;
-                let total = 7; // Name, Title, Story, Image, Prompt, Copy, Ethics
+                let total = 6; // Ajustado: Se eliminó el requerimiento de Prompt
 
                 if (data.studentName) points++;
                 if (data.storyTitle) points += 0.5;
                 if (data.storyText.length > 20) points += 1; // Weighted more
                 if (data.imageSrc) points += 1.5; // Weighted more
-                if (data.prompt) points++;
+                // Prompt requirement removed
                 if (data.copyText) points++;
                 if (Object.values(data.ethics).every(Boolean)) points++;
 
@@ -507,40 +507,49 @@
                                         ) : (
                                             <FileInput onImageSelect={(src) => handleInputChange('imageSrc', src)} />
                                         )}
+                                        <p className="text-xs text-gray-500 mt-2 text-center">Sube aquí tu resultado final (JPG, PNG)</p>
                                     </div>
 
-                                    {/* Metadata Area */}
-                                    <div className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm text-gray-400 mb-1">Herramienta IA Usada</label>
-                                            <select 
-                                                value={data.aiTool}
-                                                onChange={(e) => handleInputChange('aiTool', e.target.value)}
-                                                className="w-full bg-console border border-gray-700 rounded p-3 text-white focus:border-active focus:outline-none"
-                                            >
-                                                <option>Midjourney</option>
-                                                <option>DALL-E 3</option>
-                                                <option>Stable Diffusion</option>
-                                                <option>Bing Image Creator</option>
-                                                <option>Canva Magic Media</option>
-                                                <option>Adobe Firefly</option>
-                                            </select>
+                                    {/* Info Area (New) */}
+                                    <div className="space-y-6">
+                                        <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                                            <h3 className="font-bold text-active mb-2 flex items-center text-sm uppercase tracking-wider">
+                                                <Icon name="Lightbulb" size={16} className="mr-2" />
+                                                Fórmula de Prompt
+                                            </h3>
+                                            <p className="text-sm text-gray-400 mb-3">Para obtener mejores resultados, estructura tu petición así:</p>
+                                            <div className="bg-console p-3 rounded border border-gray-600 font-mono text-xs text-green-400 mb-2">
+                                                "[Sujeto] + [Entorno] + [Estilo Artístico] + [Iluminación/Ambiente]"
+                                            </div>
+                                            <p className="text-xs text-gray-500 italic">
+                                                Ej: "Un robot jardinero cuidando plantas bioluminiscentes en una estación espacial, estilo cyberpunk, luz de neón azul, cinemático."
+                                            </p>
                                         </div>
-                                        
+
                                         <div>
-                                            <label className="block text-sm text-gray-400 mb-1">Prompt Utilizado</label>
-                                            <textarea 
-                                                value={data.prompt}
-                                                onChange={(e) => handleInputChange('prompt', e.target.value)}
-                                                className="w-full bg-console border border-gray-700 rounded p-3 text-white h-32 focus:border-active focus:outline-none text-sm"
-                                                placeholder="/imagine prompt: ..."
-                                            />
-                                            <button 
-                                                onClick={analyzePrompt}
-                                                className="mt-2 text-xs bg-active bg-opacity-20 text-active hover:bg-opacity-30 px-3 py-1 rounded flex items-center transition-colors w-full justify-center"
-                                            >
-                                                <Icon name="Wand2" size={14} className="mr-1" /> Analizar Prompt
-                                            </button>
+                                            <h3 className="font-bold text-white mb-3 text-sm uppercase tracking-wider flex items-center">
+                                                <Icon name="Monitor" size={16} className="mr-2" />
+                                                Plataformas Gratuitas
+                                            </h3>
+                                            <ul className="space-y-2">
+                                                {[
+                                                    { name: "Bing Image Creator", desc: "Usa DALL-E 3. Muy potente y fácil de usar." },
+                                                    { name: "Microsoft Designer", desc: "Ideal para crear composiciones y diseños." },
+                                                    { name: "Canva Magic Media", desc: "Integrado directamente en el editor de Canva." },
+                                                    { name: "Leonardo.ai", desc: "Opciones avanzadas con créditos diarios gratis." },
+                                                    { name: "Adobe Firefly", desc: "Alta calidad y seguro para uso escolar (Web)." }
+                                                ].map((tool, idx) => (
+                                                    <li key={idx} className="flex items-start space-x-3 bg-gray-800/50 p-2 rounded hover:bg-gray-800 transition-colors group cursor-default">
+                                                        <div className="bg-active/20 p-1.5 rounded text-active mt-0.5 group-hover:bg-active group-hover:text-white transition-colors">
+                                                            <Icon name="ExternalLink" size={12} />
+                                                        </div>
+                                                        <div>
+                                                            <span className="block text-sm font-bold text-gray-200">{tool.name}</span>
+                                                            <span className="block text-[10px] text-gray-500">{tool.desc}</span>
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
